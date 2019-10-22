@@ -11,6 +11,7 @@ export default {
             filter_length: '',
             ui_detail: false,
             active: true,
+            auto_scroll: true,
             ui_class: 'max',
             current_data: {}
         };
@@ -70,10 +71,18 @@ export default {
             clear_all() {
                 this.$emit('remove_all');
             },
+            change_auto_scroll() {
+                this.auto_scroll = !this.auto_scroll;
+            },
             ws_send(data) {
                 this.$emit('ws_send', data);
             },
-
+            new_data_notify(data) {
+                if (this.auto_scroll) {
+                    let container = this.$el.querySelector("#websocket_log_table");
+                    window.scrollTo(0, container.scrollHeight);
+                }
+            },
             type_formatter(type) {
                 const types =
                     {

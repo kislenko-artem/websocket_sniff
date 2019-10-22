@@ -15,12 +15,13 @@ function connected(p, i) {
 }
 
 function new_data(data) {
-    const maxItems = 20000;
+    const maxItems = 1000;
     app.$children[0].ws_data.push(data);
     if (app.$children[0].ws_data.length > maxItems) {
-        // если много сообщений браузер начинает подвисать и затем погибает...
+        // if there are a lot of messages browser is dieing
         app.$children[0].ws_data.shift()
     }
+    app.$children[0].$children[0].new_data_notify();
 }
 
 Vue.config.productionTip = false;

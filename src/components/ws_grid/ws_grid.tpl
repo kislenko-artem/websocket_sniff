@@ -1,11 +1,17 @@
 <div v-bind:class="ui_class">
-    <div  class="grid" v-bind:class="ui_class" >
+    <div  class="grid" v-bind:class="ui_class" id="grid">
 
         <div class="tools" v-bind:class="ui_class">
 
             <div class="wrap">
                 <div class="cell clear_all">
                     <button v-on:click="clear_all();">Clear All</button>
+                </div>
+                <div class="cell">
+                <label for="auto_scroll" v-on:click="auto_scroll();">AutoScroll</label>
+                <input v-model="auto_scroll" type="checkbox" id = "auto_scroll"  v-on:click="change_auto_scroll();"
+                	:checked = "auto_scroll"/>
+
                 </div>
                 <div class="cell">
 

@@ -19,7 +19,7 @@ function new_data(data) {
     app.$children[0].ws_data.push(data);
     if (app.$children[0].ws_data.length > maxItems) {
         // если много сообщений браузер начинает подвисать и затем погибает...
-        app.$children[0].ws_data.pop()
+        app.$children[0].ws_data.shift()
     }
 }
 

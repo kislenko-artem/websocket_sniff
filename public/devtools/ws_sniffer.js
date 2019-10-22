@@ -107,22 +107,30 @@ function createJS(callback) {
 
 
 document.body.addEventListener("ws_sniff_debug_to", function (e) {
-    browser.runtime.sendMessage({
+    var sending = browser.runtime.sendMessage({
         type: "to_websocket",
         message: e.detail.data,
         url: e.detail.obj.url
     });
-
-
+    sending.then(handleResponse, handleError);
 });
 
+function handleResponse(message) {
+    //console.log(`Message from the background script:  ${message.response}`);
+}
+
+function handleError(error) {
+    console.log(`ws sniff error: ${error}`);
+}
+
 document.body.addEventListener("ws_sniff_debug_from", function (e) {
-    browser.runtime.sendMessage({
+    var sending = browser.runtime.sendMessage({
         type: "from_websocket",
-        message: e.detail.data,
-        url: e.detail.obj.url
+        message: e.detail.data.data,
+        url: '' + e.detail.obj.url
 
     });
+    sending.then(handleResponse, handleError);
 
 
 });

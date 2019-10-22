@@ -12,6 +12,7 @@ export default {
             ui_detail: false,
             active: true,
             auto_scroll: true,
+            auto_scroll_by_auto: false,
             ui_class: 'max',
             current_data: {}
         };
@@ -110,8 +111,10 @@ export default {
 
 
             detail(data) {
-
-
+                if (this.auto_scroll) {
+                    this.auto_scroll_by_auto = true;
+                }
+                this.auto_scroll = false;
                 this.ui_detail = true;
 
                 this.current_data = data;
@@ -122,6 +125,10 @@ export default {
             hide_detail() {
 
                 this.ui_detail = false;
+                if (this.auto_scroll_by_auto) {
+                    this.auto_scroll_by_auto = false;
+                    this.auto_scroll = true;
+                }
             },
             show_data() {
                 console.log('show_data');

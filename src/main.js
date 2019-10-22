@@ -19,6 +19,7 @@ function new_data(data) {
     app.$children[0].ws_data.push(data);
     if (app.$children[0].ws_data.length > maxItems) {
         // if there are a lot of messages browser is dieing
+        // maybe would be better count letters not items
         app.$children[0].ws_data.shift()
     }
     app.$children[0].$children[0].new_data_notify();

@@ -45,96 +45,45 @@ function createJS(callback) {
     var s = document.createElement('script');
     s.setAttribute('type', 'text/javascript');
     s.text = `
- 	(function debugify_content_script(){
-  var nativeWebSocket = window.WebSocket;
-  var requests = window.requestLog = {}; 
-  var WebSocket = window.WebSocket = function(uri) {
-    this.websocket = new nativeWebSocket(uri);
-    this.websocket.onopen = this.onOpen.bind(this);
-    this.websocket.onmessage = this.onMessage.bind(this);
-    this.listeners = {onmessage: null, onopen: null};
+ WebSocket.prototype = null; // extending WebSocket will throw an error if this is not set
+ const ORIGINAL_WEBSOCKET = WebSocket;
+ var WebSocket = window.WebSocket = class extends WebSocket {
+  constructor(...args) {
+   super(...args);
 
-    if (!window._openWebSockets) window._openWebSockets = [];
-    window._openWebSockets.push(this);
-  };
-  WebSocket.prototype.send = function(msg) {
-  	let ws_sniff_debug_to = new CustomEvent("ws_sniff_debug_to",
-	  {
-		  detail:
-			  {
-				  data: msg,
-				  obj: this.websocket
-			  }
-	  }
-	);
-	document.body.dispatchEvent(ws_sniff_debug_to);
-    this.websocket.send.apply(this.websocket, arguments);
-  };
-  WebSocket.prototype.onOpen = function(e){
-  	let ws_sniff_debug_open = new CustomEvent("ws_sniff_debug_open",
-	  {
-		  detail:
-			  {
-				  data: e.data,
-				  obj: this.websocket
-			  }
-	  }
-	);
-	document.body.dispatchEvent(ws_sniff_debug_open);
-    this.listeners.onopen(e);
-  };
-  WebSocket.prototype.onMessage = function(e){
-  	let ws_sniff_debug_from = new CustomEvent("ws_sniff_debug_from",
-	  {
-		  detail:
-			  {
-				  data: e.data,
-				  obj: this.websocket
-			  }
-	  }
-	);
-	document.body.dispatchEvent(ws_sniff_debug_from);
-      
-    this.listeners.onmessage(e);
-  };
-  Object.defineProperty(WebSocket.prototype, 'readyState', {
-    get: function() {
-      return this.websocket.readyState;
+   this.addEventListener('message', event => {
+    let ws_sniff_debug_from = new CustomEvent( "ws_sniff_debug_from", {
+     detail: {
+      data: event,
+      obj: this
+     }
+    });
+    document.body.dispatchEvent(ws_sniff_debug_from);
+   });
+
+   this.addEventListener('open', event => {
+    let ws_sniff_debug_open = new CustomEvent( "ws_sniff_debug_open", {
+     detail: {
+      data: event,
+      obj: this
+     }
+    });
+    // document.body.dispatchEvent(ws_sniff_debug_open);
+   });
+
+   
+  }
+  send(...args) {
+   let ws_sniff_debug_to = new CustomEvent( "ws_sniff_debug_to", {
+    detail: {
+     data: args[0],
+     obj: this
     }
-  });
-  Object.defineProperty(WebSocket.prototype, 'onopen', {
-    get: function() {
-      return this.listeners.onopen;
-    },
-    set: function(fn) {
-      this.listeners.onopen = fn;
-    }
-  });
-  Object.defineProperty(WebSocket.prototype, 'onclose', {
-    get: function() {
-      return this.websocket.onclose;
-    },
-    set: function(fn) {
-      this.websocket.onclose = fn;
-    }
-  });
-  Object.defineProperty(WebSocket.prototype, 'onmessage', {
-    get: function() {
-      return this.listeners.onmessage;
-    },
-    set: function(fn) {
-      this.listeners.onmessage = fn;
-    }
-  });
-  Object.defineProperty(WebSocket.prototype, 'onerror', {
-    get: function() {
-      return this.websocket.onerror;
-    },
-    set: function(fn) {
-      this.websocket.onerror = fn;
-    }
-  });
-})();`;
+   });
+   document.body.dispatchEvent(ws_sniff_debug_to);
+   super.send(...args);
+  }
+ }`;
 
     // TODO: url need send
     var sending = browser.runtime.sendMessage({

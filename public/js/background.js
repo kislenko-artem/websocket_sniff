@@ -3,7 +3,10 @@
  tab.
  */
 function handleMessage(request, sender, sendResponse) {
-    // TODO: url need check, because will be showed all messages
+    // blocked messages from inactive tabs
+    if (sender.tab !== undefined && !sender.tab.active) {
+        return
+    }
     switch (request.type) {
         case 'from_websocket':
             var myPort = browser.runtime.connect({name: "from_websocket"});
@@ -21,7 +24,7 @@ function handleMessage(request, sender, sendResponse) {
             var myPort = browser.runtime.connect({name: "open_websocket"});
             myPort.postMessage(request);
             break;
-
+        // TODO: генерировать уникальный ID, сопаставлять с активной влкадкой, отдавать уникальный id для сообщений с активной страницей
         case 'open_websocket_tab':
             window.localStorage.setItem("is_open_tab", "on");
             break;

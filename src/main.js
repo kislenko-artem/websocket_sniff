@@ -15,9 +15,9 @@ function connected(p, i) {
 }
 
 function new_data(data) {
-    const maxItems = 1000;
+    app.maxItems = 30;
     app.$children[0].ws_data.push(data);
-    if (app.$children[0].ws_data.length > maxItems) {
+    if (app.$children[0].ws_data.length > app.maxItems) {
         // if there are a lot of messages browser is dieing
         // maybe would be better count letters not items
         app.$children[0].ws_data.shift()

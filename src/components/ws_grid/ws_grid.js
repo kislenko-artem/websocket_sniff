@@ -1,4 +1,5 @@
 import ws_detail from "@/components/ws_detail/ws_detail.vue";
+import ws_row from "@/components/ws_row/ws_row.vue";
 
 export default {
     name: 'WebSocket_Grid',
@@ -17,7 +18,7 @@ export default {
             current_data: {}
         };
     },
-    components: {ws_detail},
+    components: {ws_detail, ws_row},
     props:
         {
             ws_data:
@@ -79,19 +80,18 @@ export default {
                 this.$emit('ws_send', data);
             },
             new_data_notify(data) {
+                const container = this.$el.querySelector("#websocket_log_table");
                 if (this.auto_scroll) {
-                    let container = this.$el.querySelector("#websocket_log_table");
                     window.scrollTo(0, container.scrollHeight);
+                    return
                 }
-            },
-            type_formatter(type) {
-                const types =
-                    {
-                        "from_websocket": "<span style = 'color:red'> ↓  </span>",
-                        "to_websocket": "<span style = 'color:green'> ↑ </span>"
-                    };
-
-                return types[type];
+                const maxItems = this.$parent.$parent.maxItems;
+                console.log(maxItems, this.virtual_data.length, window.scrollY);
+                if (this.virtual_data.length >= maxItems) {
+                    console.log("1", window.scrollY);
+                    window.scrollTo(0, window.scrollY-30);
+                    console.log("2", window.scrollY);
+                }
             },
 
 
@@ -108,7 +108,6 @@ export default {
 
 
             },
-
 
             detail(data) {
                 if (this.auto_scroll) {

@@ -40,14 +40,7 @@
             </div>
         </div>
         <div id="websocket_log_table">
-            <div class="row" style="width: 100%" v-for="(item, index) in virtual_data"  v-bind:class="item.class" >
-                <div class="type" v-html = "type_formatter(item.type)"></div>
-                <div class="data" v-on:click=" detail(item.data)">
-                    {{item.formatted_data}}
-                </div>
-                <div class="length">{{item.length}}</div>
-                <div class="time">{{item.formatted_time}}</div>
-            </div>
+        	<ws_row  v-for="(item, index) in virtual_data" :item="item" :detail="detail"/>
         </div>
 
     </div>

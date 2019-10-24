@@ -1,27 +1,25 @@
-import ws_detail from "@/components/ws_detail/ws_detail.vue";
-import ws_row from "@/components/ws_row/ws_row.vue";
+import wsDetail from "../../components/Detail/detail";
+import wsRow from "../../components/Row/row";
 
 export default {
     name: 'WebSocket_Grid',
     data: function () {
-
-
         return {
-            filter_type: 'all',
-            filter_regexp: '',
-            filter_length: '',
-            ui_detail: false,
+            filterType: 'all',
+            filterRegexp: '',
+            filterLength: '',
+            uiDetail: false,
             active: true,
-            auto_scroll: true,
-            auto_scroll_by_auto: false,
-            ui_class: 'max',
-            current_data: {}
+            autoScroll: true,
+            autoScrollByAuto: false,
+            uiClass: 'max',
+            currentData: {}
         };
     },
-    components: {ws_detail, ws_row},
+    components: {wsDetail, wsRow},
     props:
         {
-            ws_data:
+            wsFrames:
                 {
                     type: Array,
                     default: []
@@ -31,17 +29,17 @@ export default {
         {
             virtual_data() {
 
-                return this.ws_data.filter(function (item) {
-                    let regexp = RegExp(this.filter_regexp);
+                return this.wsFrames.filter(function (item) {
+                    let regexp = RegExp(this.filterRegexp);
 
-                    if ((this.filter_regexp.length > 0) && (!regexp.test(item.data) == true)) {
+                    if ((this.filterRegexp.length > 0) && (!regexp.test(item.data) == true)) {
                         return;
                     }
 
-                    if ((this.filter_length.length > 0) && (!filter_by_length(item.length, this.filter_length))) {
+                    if ((this.filterLength.length > 0) && (!filter_by_length(item.length, this.filterLength))) {
                         return;
                     }
-                    if (((this.filter_type !== 'all') && (item.type !== this.filter_type))) {
+                    if (((this.filterType !== 'all') && (item.type !== this.filterType))) {
                         return;
                     }
 
@@ -63,25 +61,25 @@ export default {
 
         },
     watch: {
-        ui_detail(status) {
-            this.ui_class = (status) ? 'min' : 'max';
+        uiDetail(status) {
+            this.uiClass = (status) ? 'min' : 'max';
 
         }
     },
     methods:
         {
-            clear_all() {
+            clearAll() {
                 this.$emit('remove_all');
             },
-            change_auto_scroll() {
-                this.auto_scroll = !this.auto_scroll;
+            changeAutoScroll() {
+                this.autoScroll = !this.autoScroll;
             },
-            ws_send(data) {
+            wsSend(data) {
                 this.$emit('ws_send', data);
             },
-            new_data_notify(data) {
+            newDataNotify(data) {
                 const container = this.$el.querySelector("#websocket_log_table");
-                if (this.auto_scroll) {
+                if (this.autoScroll) {
                     window.scrollTo(0, container.scrollHeight);
                     return
                 }
@@ -93,45 +91,34 @@ export default {
                     console.log("2", window.scrollY);
                 }
             },
-
-
-            show_edit_window(data) {
+            showEditWindow(data) {
                 console.log('data:');
                 console.log(data);
             },
-            clear_filters() {
-
-                this.filter_type = 'all';
-                this.filter_regexp = '';
-                this.filter_length = '';
-                this.ui_class = 'max';
-
-
+            clearFilters() {
+                this.filterType = 'all';
+                this.filterRegexp = '';
+                this.filterLength = '';
+                this.uiClass = 'max';
             },
-
             detail(data) {
-                if (this.auto_scroll) {
-                    this.auto_scroll_by_auto = true;
+                if (this.autoScroll) {
+                    this.autoScrollByAuto = true;
                 }
-                this.auto_scroll = false;
-                this.ui_detail = true;
+                this.autoScroll = false;
+                this.uiDetail = true;
 
-                this.current_data = data;
+                this.currentData = data;
 
 
             },
-
-            hide_detail() {
-
-                this.ui_detail = false;
-                if (this.auto_scroll_by_auto) {
-                    this.auto_scroll_by_auto = false;
-                    this.auto_scroll = true;
+            hideDetail() {
+                this.uiDetail = false;
+                if (this.autoScrollByAuto) {
+                    this.autoScrollByAuto = false;
+                    this.autoScroll = true;
                 }
             },
-            show_data() {
-                console.log('show_data');
-            }
         }
 };
 

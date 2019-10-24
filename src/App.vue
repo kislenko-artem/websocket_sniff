@@ -1,38 +1,31 @@
 <template>
-
-
-    <div id="app">
-        <ws_grid
-                :ws_data="ws_data"
-                @remove_all="remove_all"
-                @ws_send="ws_send"
-        />
-
-
-    </div>
+  <div id="app">
+    <Grid
+      :ws-frames="wsFrames"
+      @remove_all="remove_all"
+      @ws_send="ws_send"/>
+  </div>
 </template>
 
 <script>
-
-    import ws_grid from './components/ws_grid/ws_grid.vue';
+    import Grid from './components/Grid/grid';
 
     export default {
         name: 'Home',
         components:
             {
-                ws_grid: ws_grid
+                Grid: Grid
             },
         data() {
             return {
-                ws_data: []
+                wsFrames: []
             };
         },
         methods: {
             remove_all() {
-                this.ws_data = [];
+                this.wsFrames = [];
             },
             ws_send(item_data) {
-
                 let d;
                 try {
                     d = JSON.stringify(JSON.parse(item_data));
@@ -40,8 +33,7 @@
                     d = item_data.toString();
                 }
 
-
-                this.ws_data.push({
+                this.wsFrames.push({
                     type: 'to',
                     data: d,
                     length: item_data.length,
@@ -52,9 +44,8 @@
 
         },
     };
-
-
 </script>
+
 <style>
 
     body {

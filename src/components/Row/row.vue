@@ -10,10 +10,10 @@
         <div
                 class="data"
                 @click="sendDetail(item.data)">
-            {{ item.formatted_data }}
+            {{ item.formattedData }}
         </div>
         <div class="length">{{ item.length }}</div>
-        <div class="time">{{ item.formatted_time }}</div>
+        <div class="time">{{ item.formattedTime }}</div>
     </div>
 </template>
 
@@ -49,7 +49,7 @@
                 this.detail(data);
             }
         },
-    }
+    };
 </script>
 
-<style scoped lang="less" src="./row.less"></style>
+<style scoped lang="less" src="./style.less"></style>

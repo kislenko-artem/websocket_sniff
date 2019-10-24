@@ -1,26 +1,24 @@
-<template 
-  xmlns:v-bind="http://www.w3.org/1999/xhtml" 
-  xmlns:v-on="http://www.w3.org/1999/xhtml">
-  <div :class="ui_class">
-    <div 
-      id="grid" 
-      :class="ui_class" 
+<template>
+  <div :class="uiClass">
+    <div
+      id="grid"
+      :class="uiClass"
       class="grid">
-      <div 
-        :class="ui_class" 
+      <div
+        :class="uiClass"
         class="tools">
         <div class="wrap">
           <div class="cell clear_all">
             <button @click="clearAll()">Clear All</button>
           </div>
           <div class="cell">
-            <label 
-              for="auto-scroll" 
+            <label
+              for="auto-scroll"
               @click="autoScroll()">AutoScroll</label>
-            <input 
-              id="auto-scroll" 
-              v-model="autoScroll" 
-              :checked="autoScroll" 
+            <input
+              id="auto-scroll"
+              v-model="autoScroll"
+              :checked="autoScroll"
               type="checkbox"
               @click="changeAutoScroll();">
           </div>
@@ -32,20 +30,20 @@
             </select>
           </div>
           <div class="cell">
-            <input 
-              v-model="filterRegexp" 
-              style="width: 300px" 
+            <input
+              v-model="filterRegexp"
+              style="width: 300px"
               type="text"
               placeholder="Filter (you can use regex)">
             &nbsp; &nbsp;
-            <input 
-              v-model="filterLength" 
-              style="width: 200px" 
-              type="text" 
+            <input
+              v-model="filterLength"
+              style="width: 200px"
+              type="text"
               placeholder="Length (<>)">
-            <button 
-              id="clear-filters" 
-              style="width: 100px" 
+            <button
+              id="clear-filters"
+              style="width: 100px"
               @click="clearFilters()">
               Clear filters
             </button>
@@ -59,16 +57,16 @@
         </div>
       </div>
       <div id="websocket-log-table">
-        <wsRow 
-          v-for="(item, index) in virtualData" 
-          :item="item" 
+        <wsRow
+          v-for="(item, index) in virtualData"
+          :item="item"
           :detail="detail"/>
       </div>
     </div>
-    <div 
-      v-if="uiDetail" 
+    <div
+      v-if="uiDetail"
       class="frame">
-      <wsDetail 
+      <wsDetail
         :item-data="currentData"
         @showEditWindow="showEditWindow"
         @wsSend="wsSend"
@@ -78,7 +76,7 @@
   </div>
 </template>
 
-<script src="./grid.js"></script>
+<script src="./script.js"></script>
 
-<style scoped lang="less" src="./grid.less"></style>
+<style scoped lang="less" src="./style.less"></style>
 

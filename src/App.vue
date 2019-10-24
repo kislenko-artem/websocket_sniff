@@ -3,7 +3,7 @@
     <Grid
       :ws-frames="wsFrames"
       @remove_all="remove_all"
-      @ws_send="ws_send"/>
+      @ws_send="ws_send"></Grid>
   </div>
 </template>
 

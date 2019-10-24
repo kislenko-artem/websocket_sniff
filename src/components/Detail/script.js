@@ -1,7 +1,8 @@
 import VueJsonPretty from 'vue-json-pretty';
 
+
 export default {
-    name: "wsDetail",
+    name: "Detail",
     components: {
         VueJsonPretty
     },
@@ -65,3 +66,4 @@ export default {
 
 
 };
+

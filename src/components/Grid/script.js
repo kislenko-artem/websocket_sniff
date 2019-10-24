@@ -1,8 +1,10 @@
+import Vue from 'vue'
+
 import wsDetail from "../../components/Detail/detail";
 import wsRow from "../../components/Row/row";
 
 export default {
-    name: 'WebSocket_Grid',
+    name: 'Grid',
     data: function () {
         return {
             filterType: 'all',
@@ -27,7 +29,10 @@ export default {
         },
     computed:
         {
-            virtual_data() {
+            virtualData() {
+
+                this.wsFrames.push({data: "just text data", type: "from", time: (new Date()) });
+                this.wsFrames.push({data: '{"data": "data"}', type: "from", time: (new Date()) });
 
                 return this.wsFrames.filter(function (item) {
                     let regexp = RegExp(this.filterRegexp);
@@ -36,23 +41,21 @@ export default {
                         return;
                     }
 
-                    if ((this.filterLength.length > 0) && (!filter_by_length(item.length, this.filterLength))) {
+                    if ((this.filterLength.length > 0) && (!filterByLength(item.length, this.filterLength))) {
                         return;
                     }
                     if (((this.filterType !== 'all') && (item.type !== this.filterType))) {
                         return;
                     }
 
-                    item['formatted_data'] = (item.data.length > 100) ? item.data.slice(0, 100) + '...' : item.data;
+                    item['formattedData'] = (item.data.length > 100) ? item.data.slice(0, 100) + '...' : item.data;
 
 
                     let format_min = (item.time.getMinutes().length > 1) ? "0" + item.time.getMinutes() : item.time.getMinutes();
                     let format_hour = (item.time.getHours().length > 1) ? "0" + item.time.getHours() : item.time.getHours();
                     let format_seconds = (item.time.getSeconds().length > 1) ? "0" + item.time.getSeconds() : item.time.getSeconds();
 
-                    item['formatted_time'] = format_hour + ':' + format_min + ':' + format_seconds + '.' + item.time.getMilliseconds();
-
-                    item['class'] = (item.from_devtools) ? 'from_devtools' : '';
+                    item['formattedTime'] = format_hour + ':' + format_min + ':' + format_seconds + '.' + item.time.getMilliseconds();
                     return item;
 
                 }.bind(this));
@@ -83,13 +86,13 @@ export default {
                     window.scrollTo(0, container.scrollHeight);
                     return
                 }
-                const maxItems = this.$parent.$parent.maxItems;
-                console.log(maxItems, this.virtual_data.length, window.scrollY);
-                if (this.virtual_data.length >= maxItems) {
-                    console.log("1", window.scrollY);
-                    window.scrollTo(0, window.scrollY-30);
-                    console.log("2", window.scrollY);
-                }
+                // const maxItems = this.$parent.$parent.maxItems;
+                // console.log(maxItems, this.virtual_data.length, window.scrollY);
+                // if (this.virtual_data.length >= maxItems) {
+                //     console.log("1", window.scrollY);
+                //     window.scrollTo(0, window.scrollY-30);
+                //     console.log("2", window.scrollY);
+                // }
             },
             showEditWindow(data) {
                 console.log('data:');
@@ -123,7 +126,7 @@ export default {
 };
 
 
-function filter_by_length(length, filter_value) {
+function filterByLength(length, filter_value) {
 
 
     length = parseInt(length);

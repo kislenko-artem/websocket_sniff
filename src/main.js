@@ -4,7 +4,7 @@ import App from './App.vue'
 
 function connected(p, i) {
     p.onMessage.addListener(function (m) {
-        new_data({
+        newData({
             type: m.type,
             data: m.message,
             length: m.message.length,
@@ -14,23 +14,22 @@ function connected(p, i) {
     });
 }
 
-function new_data(data) {
+function newData(data) {
     app.maxItems = 30;
-    app.$children[0].ws_data.push(data);
-    if (app.$children[0].ws_data.length > app.maxItems) {
+    app.$children[0].wsFrames.push(data);
+    if (app.$children[0].wsFrames.length > app.maxItems) {
         // if there are a lot of messages browser is dieing
         // maybe would be better count letters not items
-        app.$children[0].ws_data.shift()
+        app.$children[0].wsFrames.shift()
     }
-    app.$children[0].$children[0].new_data_notify();
+    app.$children[0].$children[0].newDataNotify();
 }
 
 Vue.config.productionTip = false;
 window.app = new Vue({
     render: h => h(App),
-
 }).$mount('#app');
-browser.runtime.onConnect.addListener(connected);
+//browser.runtime.onConnect.addListener(connected);
 
 
 

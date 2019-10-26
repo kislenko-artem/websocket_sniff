@@ -1,7 +1,5 @@
-import Vue from 'vue'
-
-import wsDetail from "../../components/Detail/detail";
-import wsRow from "../../components/Row/row";
+import Detail from "../../components/Detail/detail";
+import Row from "../../components/Row/row";
 
 export default {
     name: 'Grid',
@@ -18,7 +16,7 @@ export default {
             currentData: {}
         };
     },
-    components: {wsDetail, wsRow},
+    components: {Detail, Row},
     props:
         {
             wsFrames:
@@ -30,10 +28,6 @@ export default {
     computed:
         {
             virtualData() {
-
-                this.wsFrames.push({data: "just text data", type: "from", time: (new Date()) });
-                this.wsFrames.push({data: '{"data": "data"}', type: "from", time: (new Date()) });
-
                 return this.wsFrames.filter(function (item) {
                     let regexp = RegExp(this.filterRegexp);
 
@@ -44,6 +38,7 @@ export default {
                     if ((this.filterLength.length > 0) && (!filterByLength(item.length, this.filterLength))) {
                         return;
                     }
+
                     if (((this.filterType !== 'all') && (item.type !== this.filterType))) {
                         return;
                     }
@@ -51,17 +46,15 @@ export default {
                     item['formattedData'] = (item.data.length > 100) ? item.data.slice(0, 100) + '...' : item.data;
 
 
-                    let format_min = (item.time.getMinutes().length > 1) ? "0" + item.time.getMinutes() : item.time.getMinutes();
-                    let format_hour = (item.time.getHours().length > 1) ? "0" + item.time.getHours() : item.time.getHours();
-                    let format_seconds = (item.time.getSeconds().length > 1) ? "0" + item.time.getSeconds() : item.time.getSeconds();
+                    let format_min = (item.time.getMinutes().toString().length <= 1) ? "0" + item.time.getMinutes() : item.time.getMinutes();
+                    let format_hour = (item.time.getHours().toString().length <= 1) ? "0" + item.time.getHours() : item.time.getHours();
+                    let format_seconds = (item.time.getSeconds().toString().length <= 1) ? "0" + item.time.getSeconds() : item.time.getSeconds();
 
                     item['formattedTime'] = format_hour + ':' + format_min + ':' + format_seconds + '.' + item.time.getMilliseconds();
                     return item;
 
                 }.bind(this));
             }
-
-
         },
     watch: {
         uiDetail(status) {
@@ -81,18 +74,11 @@ export default {
                 this.$emit('ws_send', data);
             },
             newDataNotify(data) {
-                const container = this.$el.querySelector("#websocket_log_table");
+                const container = this.$el.querySelector("#websocket-log-table");
                 if (this.autoScroll) {
                     window.scrollTo(0, container.scrollHeight);
                     return
                 }
-                // const maxItems = this.$parent.$parent.maxItems;
-                // console.log(maxItems, this.virtual_data.length, window.scrollY);
-                // if (this.virtual_data.length >= maxItems) {
-                //     console.log("1", window.scrollY);
-                //     window.scrollTo(0, window.scrollY-30);
-                //     console.log("2", window.scrollY);
-                // }
             },
             showEditWindow(data) {
                 console.log('data:');
@@ -112,8 +98,6 @@ export default {
                 this.uiDetail = true;
 
                 this.currentData = data;
-
-
             },
             hideDetail() {
                 this.uiDetail = false;
@@ -122,20 +106,38 @@ export default {
                     this.autoScroll = true;
                 }
             },
+            hashCompute(s) {
+                let hash = 0, i, chr;
+                if (s.length === 0) return hash;
+                for (i = 0; i < s.length; i++) {
+                    chr   = s.charCodeAt(i);
+                    hash  = ((hash << 5) - hash) + chr;
+                    hash |= 0; // Convert to 32bit integer
+                }
+                return hash;
+            },
+            uniqID(data) {
+                let hash = 0, i, chr;
+                if (this.length === 0) return hash;
+                for (i = 0; i < this.length; i++) {
+                    chr   = this.charCodeAt(i);
+                    hash  = ((hash << 5) - hash) + chr;
+                    hash |= 0; // Convert to 32bit integer
+                }
+
+                return this.hashCompute(data.time.getTime().toString()) + "_" + this.hashCompute(data.data);
+            }
         }
 };
 
 
 function filterByLength(length, filter_value) {
 
-
     length = parseInt(length);
-
 
     if (parseInt(filter_value) === filter_value) {
         //it is number
         return parseInt(length) === parseInt(filter_value);
-
     } else {
         let sign = filter_value.substring(0, 1);
 
@@ -150,7 +152,6 @@ function filterByLength(length, filter_value) {
                     return length < real_num;
                 default:
                     return true;
-
             }
         } else {
             return true;

@@ -46,7 +46,6 @@ export default {
             this.tempData = JSON.stringify(t, null, 4);
             this.isJson = true;
         } catch (e) {
-            console.log('error');
             this.tempData = this.itemData;
             this.isJson = false;
         }
@@ -57,10 +56,10 @@ export default {
             this.editMode = true;
         },
         send() {
-            this.$emit('ws_send', this.tempData);
+            this.$emit('wsSend', this.tempData);
         },
         hide() {
-            this.$emit('hide_detail');
+            this.$emit('hideDetail');
         }
     },
 

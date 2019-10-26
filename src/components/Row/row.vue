@@ -45,7 +45,20 @@
                 return types[type];
             },
             sendDetail(data) {
+
+                // demarked active row
+                for (let key in this.$parent.$children) {
+                    const el = this.$parent.$children[key];
+                    if (el.$data.isActive === undefined) {
+                        continue
+                    }
+                    el.$data.isActive = false;
+                }
+
+                // marked active row
                 this.isActive = true;
+
+                // show detailed
                 this.detail(data);
             }
         },

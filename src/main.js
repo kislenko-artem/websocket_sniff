@@ -15,7 +15,7 @@ function connected(p, i) {
 }
 
 function newData(data) {
-    app.maxItems = 30;
+    app.maxItems = 1000;
     app.$children[0].wsFrames.push(data);
     if (app.$children[0].wsFrames.length > app.maxItems) {
         // if there are a lot of messages browser is dieing
@@ -29,7 +29,17 @@ Vue.config.productionTip = false;
 window.app = new Vue({
     render: h => h(App),
 }).$mount('#app');
-//browser.runtime.onConnect.addListener(connected);
+
+
+// for testing in dev mode
+// setInterval(function () {
+//     newData({data: "just text data", type: "to_websocket", time: (new Date()) });
+// }, 1000);
+// setInterval(function () {
+//     newData({data: '{"data": "data"}', type: "from_websocket", time: (new Date()) });
+// }, 1100);
+
+browser.runtime.onConnect.addListener(connected);
 
 
 

@@ -9,7 +9,7 @@
         class="tools">
         <div class="wrap">
           <div class="cell clear_all">
-            <button @click="clearAll()">Clear All</button>
+            <button @click="clearAll()">&#128465</button>
           </div>
           <div class="cell">
             <label
@@ -20,13 +20,13 @@
               v-model="autoScroll"
               :checked="autoScroll"
               type="checkbox"
-              @click="changeAutoScroll();">
+              @click="changeAutoScroll()">
           </div>
           <div class="cell">
             <select v-model="filterType">
-              <option value="all">All</option>
-              <option value="from">From</option>
-              <option value="to">To</option>
+              <option value="all">all types</option>
+              <option value="from_websocket">only from</option>
+              <option value="to_websocket">only to</option>
             </select>
           </div>
           <div class="cell">
@@ -44,9 +44,7 @@
             <button
               id="clear-filters"
               style="width: 100px"
-              @click="clearFilters()">
-              Clear filters
-            </button>
+              @click="clearFilters()">&#10060;</button>
           </div>
         </div>
         <div class="row header">
@@ -57,17 +55,20 @@
         </div>
       </div>
       <div id="websocket-log-table">
-        <wsRow
+        <Row
           v-for="(item, index) in virtualData"
           :item="item"
-          :detail="detail"/>
+          :detail="detail"
+          class="rows"
+          :key="uniqID(item)"
+        />
       </div>
     </div>
     <div
       v-if="uiDetail"
       class="frame">
-      <wsDetail
-        :item-data="currentData"
+      <Detail
+        :itemData="currentData"
         @showEditWindow="showEditWindow"
         @wsSend="wsSend"
         @hideDetail="hideDetail"
